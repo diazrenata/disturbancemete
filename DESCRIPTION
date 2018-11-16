@@ -1,0 +1,13 @@
+Package: disturbancemete
+Title: Quantify and Compare Deviations from METE
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Renata",
+           family = "Diaz",
+           role = c("aut", "cre"),
+           email = "diaz.renatam@gmail.com")
+Description: Quantitatively compare disturbed & undisturbed communities, or communities sampled across a time series encompassing disturbance, to see whether there are patterns in which communities deviate more from the predictions of the Maximum Entropy Theory of Ecology.
+License: MIT + file LICENSE
+ByteCompile: true
+Encoding: UTF-8
+LazyData: true
