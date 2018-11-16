@@ -35,16 +35,57 @@ library(disturbancemete) # Or use devtools::load_all('.', quiet = T) if your cod
 
 # Introduction
 
-Here is a citation [@Marwick2017]
+<!-- Here is a citation [@Marwick2017] -->
 
 # Background
 
-```{r demo, eval = FALSE}
-1 + 1
-```
-
 # Methods
 
+Load Portal data:
+
+```{r get-portal-data, echo = T} 
+
+portal_granivores <- load_rodent_data() # defaults to controls & power = T
+
+```
+
+
+(For now) select a single year - let's say 1985
+
+```{r pick-a-year, echo = T}
+
+one_year <- extract_portal_year(portal_granivores, year = 1985)
+
+head(one_year)
+
+```
+
+
+
+Generate the meteESF object, which has meteR functions to generate the SAD and IPD. 
+
+
+Generate the iIPDs as a list.
+
+```{r make mete distributions, echo = T}
+
+esf1985 <- make_mete_ESF(one_year, "SAD")
+
+str(esf1985)
+
+sad1995 <- meteR::sad(esf1995)
+
+str(sad1995)
+
+ipd1995 <- meteR::ipd(esf1995)
+
+str(ipd1995)
+
+sipds1995 <- make_iIPDs(esf1995)
+
+str(sipds1995)
+
+```
 # Results
 
 ```{r get-data, eval = FALSE}

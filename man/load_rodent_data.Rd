@@ -4,17 +4,17 @@
 \alias{load_rodent_data}
 \title{Load Portal granivores data}
 \usage{
-load_rodent_data(treatment = "control", currency = "power")
+load_rodent_data(treatment = "control", compute_power = TRUE)
 }
 \arguments{
 \item{treatment}{Whether to load "exclosure" or "control" rodents}
 
-\item{currency}{Whether to report weight as 'abundance' (all weights = 1) or 'power'. Note that if currency = 'power' individuals missing weight measurements will be removed, and they will not be removed if currency = 'abundance'.}
+\item{compute_power}{Whether to compute power. Note that if TRUE, individuals missing weight measurements will be removed, and they will not be removed if FALSE.}
 }
 \value{
-dataframe of year, species ID, and weight (1 for just abundances, power for power) for all individuals captured.
+dataframe of year, species ID, abundances (all 1, for meteR), and power (NA if report_power = F, metabolic rate otherwise) for all individuals captured.
 }
 \description{
-All individual captures and the year. Reported as individuals (weights all = 1) or power (weight column is estimated metabolic rate, as 5.69 * (biomass ^ 0.75), after White et al 2004).
+All individual captures and the year. Reported as individuals and optionally power (power column is estimated metabolic rate, as 5.69 * (biomass ^ 0.75), after White et al 2004).
 Non-granivorous species, and individuals not identified to species, are removed.
 }

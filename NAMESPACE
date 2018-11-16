@@ -3,5 +3,6 @@
 export("%>%")
 export(extract_portal_year)
 export(load_rodent_data)
-export(make_mete_distribution)
+export(make_iIPDs)
+export(make_mete_ESF)
 importFrom(magrittr,"%>%")

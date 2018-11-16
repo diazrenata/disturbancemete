@@ -1,14 +1,14 @@
 #' Load Portal granivores data
 #'
-#' All individual captures and the year. Reported as individuals (weights all = 1) or power (weight column is estimated metabolic rate, as 5.69 * (biomass ^ 0.75), after White et al 2004).
+#' All individual captures and the year. Reported as individuals and optionally power (power column is estimated metabolic rate, as 5.69 * (biomass ^ 0.75), after White et al 2004).
 #' Non-granivorous species, and individuals not identified to species, are removed.
 #'
 #' @param treatment Whether to load "exclosure" or "control" rodents
-#' @param currency Whether to report weight as 'abundance' (all weights = 1) or 'power'. Note that if currency = 'power' individuals missing weight measurements will be removed, and they will not be removed if currency = 'abundance'.
-#' @return dataframe of year, species ID, and weight (1 for just abundances, power for power) for all individuals captured.
+#' @param compute_power Whether to compute power. Note that if TRUE, individuals missing weight measurements will be removed, and they will not be removed if FALSE.
+#' @return dataframe of year, species ID, abundances (all 1, for meteR), and power (NA if report_power = F, metabolic rate otherwise) for all individuals captured.
 #'
 #' @export
-load_rodent_data <- function(treatment = 'control', currency = 'power') {
+load_rodent_data <- function(treatment = 'control', compute_power = TRUE) {
 
   # download data from repo
   portal_tables <- portalr::load_data(path = 'repo')
@@ -47,18 +47,21 @@ load_rodent_data <- function(treatment = 'control', currency = 'power') {
     dplyr::left_join(rodent_treatments,
                      by = c('month', 'year', 'plot')) %>%
     dplyr::filter(treatment == treatment) %>%
-    dplyr::select(year, species, wgt)
+    dplyr::select(year, species, wgt) %>%
+    dplyr::mutate(abund = 1)
 
-  if(currency == 'abundance') {
-    granivores <- granivores %>%
-      dplyr::mutate(weight = 1) %>%
-      dplyr::select(-wgt)
-  } else if(currency == 'power') {
-    granivores <- granivores %>%
-      dplyr::filter(!is.na(wgt)) %>%
-      dplyr::mutate(weight = 5.69 * (wgt ^ 0.75)) %>%
-      dplyr::select(-wgt)
-  }
+ if(compute_power) {
+   granivores <- granivores %>%
+     dplyr::filter(!is.na(wgt)) %>%
+     dplyr::mutate(power = 5.69 * (wgt ^ 0.75)) %>%
+     dplyr::select(-wgt)
+ } else {
+   granivores <- granivores %>%
+     dplyr::mutate(power = NA) %>%
+     dplyr::select(-wgt)
+ }
+
+
 
   return(granivores)
 
