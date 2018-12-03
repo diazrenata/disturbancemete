@@ -1,4 +1,4 @@
-#' Generate METE predictions for SAD, IPD, iIPD
+#' Generate METE ESF
 #'
 #' Using meteR, generate the ESF for a given community dataset
 #'
@@ -23,37 +23,47 @@ make_mete_ESF <- function(community_data, state_var = F){
 
   if(!state_var) {
     if(anyNA(community_data$power)) {
-  thisESF <- meteR::meteESF(spp = as.vector(community_data$species),
-                            abund = as.vector(community_data$abund))
-  } else {
-    thisESF <- meteR::meteESF(spp = as.vector(community_data$species),
-                              abund = as.vector(community_data$abund),
-                              power = as.vector((community_data$power) / min(community_data$power)))
+      thisESF <- meteR::meteESF(spp = as.vector(community_data$species),
+                                abund = as.vector(community_data$abund))
+    } else {
+      thisESF <- meteR::meteESF(spp = as.vector(community_data$species),
+                                abund = as.vector(community_data$abund),
+                                power = as.vector((community_data$power) / min(community_data$power)))
+    }
   }
-}
 
   return(thisESF)
 
 }
 
-#' Generate the iIPDs for a community as a list
+#' Generate the METE distributions for a community as a list
 #'
 #' Using meteR, generate the iIPDs for all species in a community
 #'
 #' @param meteESF the meteESF object for the community
-#' @return a list of meteDists for the iIPDs (also called SIPDs) for all species in a community.
+#' @param power_dists logical: whether or not to include IPD and SIPD. Use F if no power data.
+#' @return a list of meteDists for the community: sad, ipd, sipds
 #' @export
 
-make_iIPDs <- function(meteESF){
+make_mete_distributions <- function(this_ESF, power_dists = T){
 
-  nspecies <- meteESF$state.var[1]
+  mete_sad   <- meteR::sad(this_ESF)
+  if(power_dists) {
+    mete_ipd <- meteR::ipd(this_ESF)
 
-  these_ipds <- list()
-
-  for(i in 1:nspecies) {
-    these_ipds[[i]] <- meteR::sipd(meteESF, sppID = i)
+    mete_sipds <- list()
+    mete_sipds$species_names <- unique(this_ESF$data$s)
+    for(i in 1:length(mete_sipds$species_names)) {
+      mete_sipds[[i+1]] <- meteR::sipd(this_ESF, mete_sipds$species_names[i])
+    }
+  }
+  if(!power_dists) {
+    mete_ipd <- NULL
+    mete_sipds <- NULL
   }
 
-  return(these_ipds)
+  mete_distributions <- list(mete_sad, mete_ipd, mete_sipds)
+
+  return(mete_distributions)
 
 }

@@ -4,12 +4,12 @@
 \alias{extract_portal_year}
 \title{Extract observations for a given year}
 \usage{
-extract_portal_year(granivores, year = 1985)
+extract_portal_year(granivores, chosen_year = 1985)
 }
 \arguments{
 \item{granivores}{Dataframe of year, species, and weight}
 
-\item{year}{Which year}
+\item{chosen_year}{Which year}
 }
 \value{
 dataframe of species ID and weight (1 for just abundances, power for power) for all records from that year.

@@ -2,7 +2,9 @@
 
 export("%>%")
 export(extract_portal_year)
+export(generate_sims)
 export(load_rodent_data)
-export(make_iIPDs)
 export(make_mete_ESF)
+export(make_mete_distributions)
+export(pull_sim)
 importFrom(magrittr,"%>%")

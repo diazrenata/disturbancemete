@@ -2,12 +2,14 @@
 % Please edit documentation in R/make-mete-predictions.R
 \name{make_mete_ESF}
 \alias{make_mete_ESF}
-\title{Generate METE predictions for SAD, IPD, iIPD}
+\title{Generate METE ESF}
 \usage{
-make_mete_ESF(community_data)
+make_mete_ESF(community_data, state_var = F)
 }
 \arguments{
 \item{community_data}{dataframe of species ID and weights (1 for abundance only) by individuals}
+
+\item{state_var}{logical: generate ESF using state variables (T) or community data vectors (F, default)}
 }
 \value{
 meteESF
