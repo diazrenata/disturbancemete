@@ -3,20 +3,34 @@
 #' Using meteR, generate the ESF for a given community dataset
 #'
 #' @param community_data dataframe of species ID and weights (1 for abundance only) by individuals
+#' @param state_var logical: generate ESF using state variables (T) or community data vectors (F, default)
 #' @return meteESF
 #' @export
 
-make_mete_ESF <- function(community_data){
+make_mete_ESF <- function(community_data, state_var = F){
 
-  if(anyNA(community_data$power)) {
-  thisESF <- meteR::meteESF(spp = community_data$species,
-                            abund = community_data$abund)
-  } else {
-    thisESF <- meteR::meteESF(spp = community_data$species,
-                              abund = community_data$abund,
-                              power = community_data$power)
+  if(state_var) {
+    nsp <- as.integer(length(unique(community_data$species)))
+    nind <- as.integer(sum(community_data$abund))
+    if(!anyNA(community_data$power)) {
+      npow <- as.numeric(sum(community_data$power) / min(community_data$power))
+      thisESF <- meteR::meteESF(S0 = nsp, N0 = nind, E0 = npow)
+    } else {
+      thisESF <- meteR::meteESF(S0 = nsp, N0 = nind)
+    }
   }
 
+
+  if(!state_var) {
+    if(anyNA(community_data$power)) {
+  thisESF <- meteR::meteESF(spp = as.vector(community_data$species),
+                            abund = as.vector(community_data$abund))
+  } else {
+    thisESF <- meteR::meteESF(spp = as.vector(community_data$species),
+                              abund = as.vector(community_data$abund),
+                              power = as.vector((community_data$power) / min(community_data$power)))
+  }
+}
 
   return(thisESF)
 

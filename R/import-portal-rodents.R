@@ -70,13 +70,14 @@ load_rodent_data <- function(treatment = 'control', compute_power = TRUE) {
 #'
 #'
 #' @param granivores Dataframe of year, species, and weight
-#' @param year Which year
+#' @param chosen_year Which year
 #' @return dataframe of species ID and weight (1 for just abundances, power for power) for all records from that year.
 #'
 #' @export
-extract_portal_year <- function(granivores, year = 1985){
+extract_portal_year <- function(granivores, chosen_year = 1985){
   this_year <- granivores %>%
-    dplyr::filter(year == year) %>%
-    dplyr::select(-year)
+    dplyr::filter(year == chosen_year) %>%
+    dplyr::select(-year) %>%
+    dplyr::mutate(abund = as.integer(abund))
   return(this_year)
 }
