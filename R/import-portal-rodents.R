@@ -11,8 +11,8 @@
 load_rodent_data <- function(treatment = 'control', compute_power = TRUE) {
 
   # download data from repo
-  portal_tables <- portalr::load_data(path = 'repo')
-
+  #portal_tables <- portalr::load_data(path = 'repo')
+  portal_tables <- portalr::load_data(path = '/Users/renatadiaz/Documents/GitHub/weecology')
   rodent_data <- portal_tables[[1]]
   species_table <- portal_tables[[2]]
   trapping_table <- portal_tables[[3]]
