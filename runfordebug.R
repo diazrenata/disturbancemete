@@ -22,6 +22,14 @@ sad_sims_oneyr$empirical
 sad_sims_oneyr$sims[[1]]
 
 ll_emp <- get_logLik(sad_sims_oneyr$empirical, dists_oneyr[[1]])
-ll_sim <- vapply(sad_sims_oneyr$sims, FUN = get_logLik, FUN.VALUE = ll_emp, meteR_dist = dists_oneyr[[1]])
+ll_sim <- vapply(sad_sims_oneyr$sims, FUN = get_logLik,
+                 FUN.VALUE = ll_emp, meteR_dist = dists_oneyr[[1]])
+# might want to make this a function, to get just the emp_quant
+# or the plot
+# wait and see about within-dist stuff though
 ll_ecdf <- ecdf(ll_sim)
 emp_quant <- ll_ecdf(ll_emp)
+plot(ll_ecdf)
+abline(v = ll_emp, col = 'red')
+
+
