@@ -31,11 +31,12 @@ get_rank_quantile <- function(sim_dists) {
 #' Get the probability of the empirical value compared to a
 #' vector of sim values.
 #'
-#' A helper function for `get_rank_quantile``
 #'
 #' @param all_values vector of all values, including the empirical value
 #' @param empirical_row index of the empirical value
 #' @return probability of empirical value given ecdf of sim values
+#'
+#' @export
 #'
 
 get_quantile <- function(all_values, empirical_row){

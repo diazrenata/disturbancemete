@@ -18,6 +18,3 @@ probability of empirical value given ecdf of sim values
 Get the probability of the empirical value compared to a
 vector of sim values.
 }
-\details{
-A helper function for `get_rank_quantile``
-}
