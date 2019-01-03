@@ -1,3 +1,5 @@
 .Rhistory
 .RData
 .Rproj.user
+sim_storage/*
+analysis/paper/sim_storage/*

@@ -1,0 +1,65 @@
+---
+title: "Portal yearly analysis"
+author: "Renata Diaz"
+date: "1/2/2019"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(disturbancemete)
+```
+
+## Load data
+
+```{r load data, echo = F}
+
+portal_granivores <- load_rodent_data() # defaults to controls & power
+
+head(portal_granivores)
+```
+
+## Split by year
+
+```{r divide into annual communities}
+
+portal_yearly_communities <- list()
+
+for(i in 1:length(unique(portal_granivores$year))) {
+  this_year <- unique(portal_granivores$year)[i]
+  portal_yearly_communities[[i]] <- extract_portal_year(portal_granivores, chosen_year= this_year)
+  names(portal_yearly_communities)[i]<-this_year
+}
+```
+
+## Get ps
+
+```{r community ps}
+
+get_probs <- function(year, list_of_communities) {
+  
+thisone <- list_of_communities[[year]]
+thispath <- paste0('./sim_storage/', year)
+dir.create(thispath)
+probs <- get_community_prob(thisone, thispath)
+
+return(probs)
+}
+
+all_probs <- lapply(X = names(portal_yearly_communities), FUN = get_probs,
+                    list_of_communities = portal_yearly_communities)
+names(all_probs) <- names(portal_yearly_communities)
+all_probs_df <- as.data.frame(names(portal_yearly_communities))
+colnames(all_probs_df) <- 'year'
+get_distp_from_list <- function(year, list_of_ps, dist_index) {
+return(as.numeric(list_of_ps[[year]][dist_index]))
+  }
+
+all_probs_df$sad_p <- vapply(all_probs_df$year, FUN = get_distp_from_list,
+                             list_of_ps = all_probs, dist_index = 1, FUN.VALUE = as.numeric(all_probs[[1]][1]))
+all_probs_df$ipd_p <- vapply(all_probs_df$year, FUN = get_distp_from_list,
+                             list_of_ps = all_probs, dist_index = 2, FUN.VALUE = as.numeric(all_probs[[1]][1]))
+
+all_probs_df
+
+```

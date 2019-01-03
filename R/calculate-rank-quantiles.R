@@ -46,3 +46,27 @@ get_quantile <- function(all_values, empirical_row){
   emp_quant <- sim_ecdf(empirical_value)
   return(emp_quant)
 }
+
+#' Get quantile of empirical value compared to theoretical sim distribution
+#'
+#' @param all_values vector of all values, including the empirical value
+#' @param empirical_row index of the empirical value
+#' @param theoretical_dist "norm" to fit a normal distribution to the sim values
+#' @return probability of empirical value given probability function generated from sim values
+#'
+#' @export
+#'
+
+get_theoretical_quantile <- function(all_values, empirical_row, theoretical_dist = 'norm'){
+  empirical_value <- all_values[empirical_row]
+  sim_values <- all_values[-empirical_row]
+  # this is slow and unnecessary
+  # sim_theor <- fitdistrplus::fitdist(sim_values, theoretical_dist)
+  # emp_p <- pnorm(empirical_value, mean = sim_theor$estimate[[1]], sd = sim_theor$estimate[[2]])
+
+  if (theoretical_dist == 'norm') {
+    emp_p <- pnorm(empirical_value, mean = mean(sim_values),
+                 sd = sd(sim_values))
+}
+  return(emp_p)
+}
