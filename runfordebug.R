@@ -5,6 +5,22 @@ portal_granivores <- load_rodent_data() # defaults to controls & power
 thisyear <- unique(portal_granivores$year)[9]
 
 one_year <- extract_portal_year(portal_granivores, chosen_year = thisyear)
+probs_test <- list()
+for(i in 1:10) {
+probs_test[[i]] <- get_community_prob(one_year, paste0('sim_storage/', i))
+}
+probs_test_df <- as.data.frame(1:10)
+colnames(probs_test_df) <- 'i'
+get_distp_from_list <- function(i, list_of_ps, dist_index) {
+  return(as.numeric(list_of_ps[[i]][dist_index]))
+}
+
+probs_test_df$sad_p <- vapply(probs_test_df$i, FUN = get_distp_from_list,
+                             list_of_ps = probs_test, dist_index = 1, FUN.VALUE = as.numeric(probs_test[[1]][1]))
+
+probs_test_df$ipd_p <- vapply(probs_test_df$i, FUN = get_distp_from_list,
+                              list_of_ps = probs_test, dist_index = 2, FUN.VALUE = as.numeric(probs_test[[1]][1]))
+
 
 esf_oneyr <- make_mete_ESF(one_year)
 

@@ -13,10 +13,14 @@ get_community_prob <- function(community_data_frame, sim_storage_path) {
 
   dists_oneyr <- make_mete_distributions(this_esf)
 
+  if(!dir.exists(sim_storage_path)) {
+    dir.create(sim_storage_path)
+  }
+
   # Generate and save SAD sims
   if(!file.exists(paste0(sim_storage_path, '/sad_sims.Rds'))) {
   generate_sims(dists_oneyr[[1]],
-                nsims = 1000, # use more
+                nsims = 100000, # use more
                 store_path = paste0(sim_storage_path, '/sad_sims.Rds'))
 }
   load(paste0(sim_storage_path, '/sad_sims.Rds'))
@@ -34,7 +38,7 @@ get_community_prob <- function(community_data_frame, sim_storage_path) {
   # Generate and save IPD sims
   if(!file.exists(paste0(sim_storage_path, '/ipd_sims.Rds'))) {
   generate_sims(dists_oneyr[[2]],
-                nsims = 1000, # use more
+                nsims = 100000, # use more
                 store_path = paste0(sim_storage_path, '/ipd_sims.Rds'))
   }
 

@@ -66,7 +66,7 @@ get_theoretical_quantile <- function(all_values, empirical_row, theoretical_dist
 
   if (theoretical_dist == 'norm') {
     emp_p <- pnorm(empirical_value, mean = mean(sim_values),
-                 sd = sd(sim_values))
+                 sd = sd(sim_values), log.p = TRUE)
 }
   return(emp_p)
 }
