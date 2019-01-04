@@ -30,6 +30,9 @@ for(i in 1:length(unique(portal_granivores$year))) {
   portal_yearly_communities[[i]] <- extract_portal_year(portal_granivores, chosen_year= this_year)
   names(portal_yearly_communities)[i]<-this_year
 }
+
+portal_yearly_communities <- portal_yearly_communities[1:10]
+
 ```
 
 ## Get ps
@@ -41,7 +44,7 @@ get_probs <- function(year, list_of_communities) {
 thisone <- list_of_communities[[year]]
 thispath <- paste0('./sim_storage/', year)
 dir.create(thispath)
-probs <- get_community_prob(thisone, thispath)
+probs <- get_community_prob(thisone, thispath, 10000)
 
 return(probs)
 }

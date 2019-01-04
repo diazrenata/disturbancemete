@@ -4,11 +4,12 @@
 #'
 #' @param community_data_frame dataframe of species, abundance, power for all individuals
 #' @param sim_storage_path storage path for stashing sims
+#' @param n_sims how many sims to draw?
 #' @return list of p of SAD, p of IPD coming from METE predictions based on community data
 #'
 #' @export
 
-get_community_prob <- function(community_data_frame, sim_storage_path) {
+get_community_prob <- function(community_data_frame, sim_storage_path, n_sims) {
   this_esf <- make_mete_ESF(community_data_frame)
 
   dists_oneyr <- make_mete_distributions(this_esf)
@@ -20,7 +21,7 @@ get_community_prob <- function(community_data_frame, sim_storage_path) {
   # Generate and save SAD sims
   if(!file.exists(paste0(sim_storage_path, '/sad_sims.Rds'))) {
   generate_sims(dists_oneyr[[1]],
-                nsims = 100000, # use more
+                nsims = n_sims, # use more
                 store_path = paste0(sim_storage_path, '/sad_sims.Rds'))
 }
   load(paste0(sim_storage_path, '/sad_sims.Rds'))
@@ -38,7 +39,7 @@ get_community_prob <- function(community_data_frame, sim_storage_path) {
   # Generate and save IPD sims
   if(!file.exists(paste0(sim_storage_path, '/ipd_sims.Rds'))) {
   generate_sims(dists_oneyr[[2]],
-                nsims = 100000, # use more
+                nsims = n_sims, # use more
                 store_path = paste0(sim_storage_path, '/ipd_sims.Rds'))
   }
 
