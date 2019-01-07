@@ -5,7 +5,7 @@ portal_granivores <- load_rodent_data() # defaults to controls & power
 
 thisyear <- unique(portal_granivores$year)[9]
 
-one_year <- extract_portal_year(portal_granivores, chosen_year = thisyear)
+one_year <- extract_portal_year(portal_granivores, chosen_year = 1980)
 
 
 # Using wrapper function

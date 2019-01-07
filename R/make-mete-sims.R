@@ -54,8 +54,12 @@ pull_sim <- function(mete_distribution, svar_n, svar_sum) {
   close_enough <- F
   while(!close_enough) {
     attempt <- mete_distribution$r(svar_n)
+    if(!anyNA(attempt)) {
+      if(!anyNA(mete_distribution$d(attempt, log = T))) {
     if(abs(sum(attempt) - svar_sum) < 0.001*svar_sum) close_enough <- T
-  }
+      }
+    }
+    }
   attempt <- sort(attempt, decreasing= T)
   return(attempt)
 }
