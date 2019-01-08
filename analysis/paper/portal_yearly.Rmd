@@ -37,7 +37,7 @@ for(i in 1:length(unique(portal_granivores$year))) {
 
 ## Get ps
 
-```{r community ps}
+```{r community ps, eval = F}
 
 for(i in 1:10) {
   
@@ -74,4 +74,66 @@ write.csv(all_probs_df, paste0('./sim_storage_yearly_100draws/', i, '/probs_df.c
 }
 
 
+```
+
+```{r get ps from multiple sims}
+
+add_ps <- function(it_index) {
+  
+  this_path <- paste0('sim_storage_yearly_100draws/', it_index, '/probs_df.csv')
+  
+  new_df <- read.csv(this_path)
+  new_df$it_index <- it_index
+  
+  return(new_df)
+}
+
+ps_100draws <- add_ps(1)
+for(i in 2:10) {
+  ps_100draws <- rbind(ps_100draws, add_ps(i))
+}
+
+summary_100draws <- ps_100draws %>%
+  dplyr::mutate(year = as.numeric(year)) %>%
+  dplyr::group_by(year) %>%
+  dplyr::summarize(sad_mean = mean(sad_p), 
+                   ipd_mean = mean(ipd_p),
+                   sad_2p5 = quantile(sad_p, probs = 0.025), 
+                   sad_97p5 = quantile(sad_p, probs = 0.975),
+                   ipd_2p5 = quantile(ipd_p, probs=0.025),
+                   ipd_97p5 = quantile(ipd_p, probs = 0.975)) %>%
+  dplyr::ungroup() 
+```
+
+```{r plots, echo = F}
+
+cpt_years <- c(1984, 1992, 1999, 2009)
+
+library(ggplot2)
+
+probs_sad_plot <- ggplot(data = summary_100draws, aes(x = summary_100draws$year, y = summary_100draws$sad_mean)) +
+
+  geom_errorbar(aes(x = summary_100draws$year,
+                    ymax = summary_100draws$sad_97p5,
+                    ymin = summary_100draws$sad_2p5), color = 'grey') +
+    geom_point(aes(x = summary_100draws$year, y = summary_100draws$sad_mean), size = 2) + 
+  geom_vline(xintercept = cpt_years, color = 'red') +
+  theme_bw() + 
+  labs(title = 'SAD p', x = 'Year', y = 'log p')
+
+probs_sad_plot
+
+
+
+probs_ipd_plot <- ggplot(data = summary_100draws, aes(x = summary_100draws$year, y = summary_100draws$ipd_mean)) +
+
+  geom_errorbar(aes(x = summary_100draws$year,
+                    ymax = summary_100draws$ipd_97p5,
+                    ymin = summary_100draws$ipd_2p5), color = 'grey') +
+    geom_point(aes(x = summary_100draws$year, y = summary_100draws$ipd_mean), size = 2) + 
+    geom_vline(xintercept = cpt_years, color = 'red') +
+  theme_bw() + 
+  labs(title = 'IPD p', x = 'Year', y = 'log p')
+
+probs_ipd_plot
 ```
