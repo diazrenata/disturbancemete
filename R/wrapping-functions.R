@@ -5,11 +5,12 @@
 #' @param community_data_frame dataframe of species, abundance, power for all individuals
 #' @param sim_storage_path storage path for stashing sims
 #' @param n_sims how many sims to draw?
+#' @param plots plot histograms of sim logliks?
 #' @return list of p of SAD, p of IPD coming from METE predictions based on community data
 #'
 #' @export
 
-get_community_prob <- function(community_data_frame, sim_storage_path, n_sims) {
+get_community_prob <- function(community_data_frame, sim_storage_path, n_sims, plots = F) {
   this_esf <- make_mete_ESF(community_data_frame)
 
   dists_oneyr <- make_mete_distributions(this_esf)
@@ -31,7 +32,7 @@ get_community_prob <- function(community_data_frame, sim_storage_path, n_sims) {
  sad_ll_emp <- get_logLik(sad_sims_oneyr$empirical, dists_oneyr[[1]])
   sad_ll_sim <- vapply(sad_sims_oneyr$sims, FUN = get_logLik,
                    FUN.VALUE = sad_ll_emp, meteR_dist = dists_oneyr[[1]])
-print(hist(sad_ll_sim))
+if(plots) {print(hist(sad_ll_sim))}
 
  # sad_ll_quantile <- get_quantile(c(ll_emp, ll_sim), 1)
 # theoretical p of empirical compared to sims
@@ -51,7 +52,7 @@ print(hist(sad_ll_sim))
   ipd_ll_emp <- get_logLik(ipd_sims_oneyr$empirical, dists_oneyr[[2]])
   ipd_ll_sim <- vapply(ipd_sims_oneyr$sims, FUN = get_logLik,
                        FUN.VALUE = ipd_ll_emp, meteR_dist = dists_oneyr[[2]])
-  print(hist(ipd_ll_sim))
+  if(plots) {print(hist(ipd_ll_sim))}
 
   # theoretical p of empirical compared to sims
   ipd_theoretical_p <- get_theoretical_quantile(c(ipd_ll_emp, ipd_ll_sim), 1, 'norm')

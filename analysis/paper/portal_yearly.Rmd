@@ -31,7 +31,7 @@ for(i in 1:length(unique(portal_granivores$year))) {
   names(portal_yearly_communities)[i]<-this_year
 }
 
-portal_yearly_communities <- portal_yearly_communities[1:10]
+#portal_yearly_communities <- portal_yearly_communities[1:10]
 
 ```
 
@@ -39,16 +39,16 @@ portal_yearly_communities <- portal_yearly_communities[1:10]
 
 ```{r community ps}
 
-for(i in 1:20) {
+for(i in 1:10) {
   
 
 get_probs <- function(year, list_of_communities) {
-  dir.create(paste0('./sim_storage_10000sims_', i, '/'))
+  dir.create(paste0('./sim_storage_yearly_100draws/', i, '/'))
 
 thisone <- list_of_communities[[year]]
-thispath <- paste0('./sim_storage_10000sims_', i, '/', year)
+thispath <- paste0('./sim_storage_yearly_100draws/', i, '/', year)
 dir.create(thispath)
-probs <- get_community_prob(thisone, thispath, 10000)
+probs <- get_community_prob(thisone, thispath, 100)
 
 return(probs)
 }
@@ -67,9 +67,9 @@ all_probs_df$sad_p <- vapply(all_probs_df$year, FUN = get_distp_from_list,
 all_probs_df$ipd_p <- vapply(all_probs_df$year, FUN = get_distp_from_list,
                              list_of_ps = all_probs, dist_index = 2, FUN.VALUE = as.numeric(all_probs[[1]][1]))
 
-all_probs_df
+print(all_probs_df)
 
-write.csv(all_probs_df, file = paste0('./sim_storage_10000sims_', i, '/', names(portal_yearly_communities)[i], '/probs_df.csv'),  row.names= F)
+write.csv(all_probs_df, paste0('./sim_storage_yearly_100draws/', i, '/probs_df.csv'),  row.names= F)
 
 }
 
